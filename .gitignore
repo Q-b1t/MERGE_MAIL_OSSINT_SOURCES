@@ -1,0 +1,7 @@
+venv
+outputs
+inputs
+notes.md
+*.xlsx
+mails_test.py
+auxiliary_modules/__pycache__/
