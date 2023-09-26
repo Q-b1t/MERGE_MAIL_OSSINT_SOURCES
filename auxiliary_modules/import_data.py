@@ -14,3 +14,9 @@ def get_mail_df(filename):
 
 def get_excel_table(filename):
     return pd.read_excel(filename)
+
+def normalize_gatherings(table,normalizing_columns = ["name","position","email"]):
+    for col in normalizing_columns:
+        if col in table.columns:
+            table[col] = table[col].apply(lambda x: str(x).lower())
+            table[col] = table[col].apply(lambda x: x.replace("nan",""))
