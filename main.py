@@ -2,13 +2,25 @@ import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from auxiliary_modules.import_data import *
+from argparse import ArgumentParser,Namespace
 
 
 if __name__ == '__main__':
+    # create cli
+    parser = ArgumentParser()
+    parser.add_argument("-m","--mails_list",help="A text file containing a list of emails (default: \"./inputs/mail_dump.txt\")",type=str,default="./inputs/mail_dump.txt",nargs="?")
+    parser.add_argument("-g","--manual_gatherings",help="A excel book containing manual gatherings of employees and emails (default: \"./inputs/manual_gatherings.xlsx\")",type=str,default="./inputs/manual_gatherings.xlsx",nargs="?")
+    parser.add_argument("-l","--leaks_table",help="An excel book containing emails leaks (default: \"./inputs/dehashed_dump.xlsx\")",type=str,default="./inputs/dehashed_dump.xlsx",nargs="?")
+
+
+    # fetch arguments
+    args: Namespace = parser.parse_args()
+
     # input files
-    mails_text_file_path = "./inputs/mail_dump.txt"
-    leaks_excel_file_path = "./inputs/dehashed_dump.xlsx"
-    manual_gatherings_excel_file_path = "./inputs/manual_gatherings.xlsx"
+    mails_text_file_path = args.mails_list
+    leaks_excel_file_path = args.leaks_table
+    manual_gatherings_excel_file_path = args.manual_gatherings
+
     # output file
     merged_data_file_path = "./outputs/merged_data.xlsx"
     # output files
@@ -24,7 +36,6 @@ if __name__ == '__main__':
     merged_leaks_mails = leaks_dump.merge(mail_text_file_dump,how="outer",on="email")
     # meget the merged data with the manual gatherings
     merged_leaks_mails_gatherings = merged_leaks_mails.merge(manual_gatherings_dump,how="outer",on="email")
-    merged_leaks_mails_gatherings.drop("Unnamed: 0", axis=1,inplace=True)
 
     # remove redundant columns
     for col in merged_leaks_mails_gatherings.columns:
@@ -38,4 +49,3 @@ if __name__ == '__main__':
         merged_leaks_mails_gatherings.rename(columns={"name_x": "name"},inplace=True)
     # export
     merged_leaks_mails_gatherings.to_excel(merged_data_file_path)
-    print(merged_leaks_mails["name"].dtype,manual_gatherings_dump["name"].dtype)
