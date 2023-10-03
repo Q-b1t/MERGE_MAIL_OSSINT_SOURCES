@@ -5,3 +5,4 @@ notes.md
 *.xlsx
 mails_test.py
 auxiliary_modules/__pycache__/
+tests
