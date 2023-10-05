@@ -16,8 +16,11 @@ def get_mail_df(filename):
     mails_table = pd.DataFrame({"email":mails})
     return mails_table 
 
-def get_excel_table(filename):
-    return pd.read_excel(filename)
+def get_table(filename,output_format):
+    if output_format == "xlsx":
+        return pd.read_excel(filename)
+    else:
+        return pd.read_csv(filename)
 
 def normalize_gatherings(table,normalizing_columns = ["name","position","email"]):
     for col in normalizing_columns:
@@ -65,14 +68,14 @@ def validate_metadata(metadata,verbose):
             continue
         validate_name(name,verbose) 
 
-def fetch_data(metadata):
+def fetch_data(metadata,output_format):
     contents = dict()
     for sample in metadata:
         if sample["present"]:
             if sample["type"] == "email_list":
                 contents[sample["type"]] = get_mail_df(filename=sample["name"])
             else:
-                contents[sample["type"]] = get_excel_table(filename=sample["name"])
+                contents[sample["type"]] = get_table(filename=sample["name"],output_format=output_format)
                 assert "email" in contents[sample["type"]].columns and "name" in contents[sample["type"]], colored(f"The table in {sample['name']} has not the appropriate format. Please make sure the columns \"email\" and \"name\" are present.","red")
                 normalize_gatherings(contents[sample["type"]])
         else:

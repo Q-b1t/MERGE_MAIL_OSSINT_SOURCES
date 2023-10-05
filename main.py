@@ -35,7 +35,7 @@ if __name__ == '__main__':
         print(colored(f"[+] Validating input and output files.","blue"))
     validate_metadata(metadata=metadata,verbose=verbose)
     validate_output_file(merged_data_file_path)
-    data_dumps = fetch_data(metadata=metadata)
+    data_dumps = fetch_data(metadata=metadata,output_format=output_format)
     merge_tables(data_dumps=data_dumps,metadata=metadata,verbose=verbose)
     merged_table = merge_tables(metadata=metadata,data_dumps=data_dumps,verbose=verbose)
     save_table(parsed_table=merged_table,save_path=merged_data_file_path,output_format=output_format,verbose=verbose)    
