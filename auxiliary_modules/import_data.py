@@ -17,7 +17,7 @@ def get_mail_df(filename):
     return mails_table 
 
 def get_table(filename,output_format):
-    if output_format == "xlsx":
+    if output_format == "excel":
         return pd.read_excel(filename)
     else:
         return pd.read_csv(filename)
